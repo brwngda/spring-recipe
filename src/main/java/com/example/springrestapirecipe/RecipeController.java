@@ -24,10 +24,11 @@ class RecipeController {
             @RequestParam(required = false) String ingredients,
             @RequestParam(required = false) Complexity complexity,
             @RequestParam(required = false) Integer duration,
-            @RequestParam(required = false) SortType sortType
-
+            @RequestParam(required = false) SortType sortType,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size
     ) {
-        return recipeService.getRecipes(ingredients, complexity, duration, sortType);
+        return recipeService.getRecipes(ingredients, complexity, duration, sortType, page, size);
     }
 
     @GetMapping("/{id}")

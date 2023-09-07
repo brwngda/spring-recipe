@@ -25,16 +25,18 @@ class RecipeService {
             String ingredients,
             Complexity complexity,
             Integer duration,
-            SortType sortType) {
+            SortType sortType,
+            Integer page,
+            Integer size) {
+        Pageable pageable = providePageable(page, size, sortType);
         Sort.Direction direction = SortType.DESC == sortType ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, "name");
-        Pageable pageable = PageRequest.of(1, 5, sort);
         if (ingredients != null) {
-            return recipeRepository.findAllByIngredientsContains(ingredients);
+            return recipeRepository.findAllByIngredientsContains(ingredients, pageable);
         } else if (complexity != null) {
-            return recipeRepository.findAllByComplexity(complexity);
+            return recipeRepository.findAllByComplexity(complexity, pageable);
         } else if (duration != null) {
-            return recipeRepository.findAllByDuration(duration);
+            return recipeRepository.findAllByDuration(duration, pageable);
         }
 
         return recipeRepository.findAll(pageable).toList();
@@ -76,5 +78,14 @@ class RecipeService {
         }
         return recipeRepository.save(recipeToUpdate);
     }
+
+    Pageable providePageable(Integer page, Integer size, SortType sortType) {
+        Sort.Direction direction = SortType.DESC == sortType ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, "name");
+        return PageRequest.of(
+                page != null && size != null ? page : 0,
+                page != null && size != null ? size : (int) recipeRepository.count(), sort);
+    }
+
 
 }
