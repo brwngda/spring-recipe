@@ -43,9 +43,7 @@ class RecipeService {
     }
 
     Recipe getRecipeById(Long id) {
-        return recipeRepository.findById(id).orElseThrow(
-                () -> new NoRecipeFoundException(id)
-        );
+        return recipeRepository.findById(id).orElseThrow(() -> new NoRecipeFoundException(id));
     }
 
 
@@ -54,15 +52,13 @@ class RecipeService {
     }
 
     Recipe deleteRecipe(Long id) {
-        Recipe recipeFromDb = recipeRepository.findById(id)
-                .orElseThrow();
+        Recipe recipeFromDb = recipeRepository.findById(id).orElseThrow(() -> new NoRecipeFoundException(id));
         recipeRepository.delete(recipeFromDb);
         return recipeFromDb;
     }
 
     Recipe updateRecipe(Long id, Recipe recipe) {
-        Recipe recipeToUpdate = recipeRepository.findById(id)
-                .orElseThrow();
+        Recipe recipeToUpdate = recipeRepository.findById(id).orElseThrow(() -> new NoRecipeFoundException(id));
         if (recipe.getName() != null) {
             recipeToUpdate.setName(recipe.getName());
         }
