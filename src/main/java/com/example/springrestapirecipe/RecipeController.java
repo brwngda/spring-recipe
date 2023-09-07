@@ -20,8 +20,12 @@ class RecipeController {
     }
 
     @GetMapping
-    List<Recipe> getRecipes() {
-        return recipeService.getRecipes();
+    List<Recipe> getRecipes(
+            @RequestParam(required = false) String ingredients,
+            @RequestParam(required = false) Complexity complexity,
+            @RequestParam(required = false) Integer duration
+    ) {
+        return recipeService.getRecipes(ingredients, complexity, duration);
     }
 
     @GetMapping("/{id}")
