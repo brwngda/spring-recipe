@@ -1,5 +1,6 @@
 package com.example.springrestapirecipe;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,13 @@ class RecipeService {
         this.recipeRepository = recipeRepository;
     }
 
-    List<Recipe> getRecipes(String ingredients, Complexity complexity, Integer duration) {
+    List<Recipe> getRecipes(
+            String ingredients,
+            Complexity complexity,
+            Integer duration,
+            SortType sortType) {
+        Sort.Direction direction = SortType.DESC == sortType ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, "name");
         if (ingredients != null) {
             return recipeRepository.findAllByIngredientsContains(ingredients);
         } else if (complexity != null) {
@@ -27,7 +34,7 @@ class RecipeService {
             return recipeRepository.findAllByDuration(duration);
         }
 
-        return recipeRepository.findAll();
+        return recipeRepository.findAll(sort);
     }
 
     Recipe getRecipeById(Long id) {

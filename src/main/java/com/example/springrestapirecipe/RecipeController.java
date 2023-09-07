@@ -23,9 +23,11 @@ class RecipeController {
     List<Recipe> getRecipes(
             @RequestParam(required = false) String ingredients,
             @RequestParam(required = false) Complexity complexity,
-            @RequestParam(required = false) Integer duration
+            @RequestParam(required = false) Integer duration,
+            @RequestParam(required = false) SortType sortType
+
     ) {
-        return recipeService.getRecipes(ingredients, complexity, duration);
+        return recipeService.getRecipes(ingredients, complexity, duration, sortType);
     }
 
     @GetMapping("/{id}")
