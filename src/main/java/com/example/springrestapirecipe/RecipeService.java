@@ -1,5 +1,7 @@
 package com.example.springrestapirecipe;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,7 @@ class RecipeService {
             SortType sortType) {
         Sort.Direction direction = SortType.DESC == sortType ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, "name");
+        Pageable pageable = PageRequest.of(1, 5, sort);
         if (ingredients != null) {
             return recipeRepository.findAllByIngredientsContains(ingredients);
         } else if (complexity != null) {
@@ -34,7 +37,7 @@ class RecipeService {
             return recipeRepository.findAllByDuration(duration);
         }
 
-        return recipeRepository.findAll(sort);
+        return recipeRepository.findAll(pageable).toList();
     }
 
     Recipe getRecipeById(Long id) {
