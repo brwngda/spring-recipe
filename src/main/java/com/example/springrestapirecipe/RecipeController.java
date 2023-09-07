@@ -1,8 +1,11 @@
 package com.example.springrestapirecipe;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 /**
  * @author Grzegorz Barwiński, brwngda
@@ -51,5 +54,11 @@ class RecipeController {
     Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
         return recipeService.updateRecipe(id, recipe);
     }
+
+    @ExceptionHandler(NoRecipeFoundException.class)
+    private ResponseEntity<Object> mapNoSuchElementException(NoRecipeFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
 
 }

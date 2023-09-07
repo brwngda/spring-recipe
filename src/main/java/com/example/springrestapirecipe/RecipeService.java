@@ -43,7 +43,9 @@ class RecipeService {
     }
 
     Recipe getRecipeById(Long id) {
-        return recipeRepository.findById(id).orElseThrow();
+        return recipeRepository.findById(id).orElseThrow(
+                () -> new NoRecipeFoundException(id)
+        );
     }
 
 

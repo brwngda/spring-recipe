@@ -6,3 +6,6 @@ spring:
     driverClassName: org.h2.Driver
   jpa:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
