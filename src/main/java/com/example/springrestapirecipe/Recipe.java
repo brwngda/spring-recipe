@@ -25,8 +25,8 @@ public class Recipe {
 
     private String name;
     private String description;
-    private int duration;
-    private int numberOfPeople;
+    private Integer duration;
+    private Integer numberOfPeople;
     private String ingredients;
     private Complexity complexity;
 
