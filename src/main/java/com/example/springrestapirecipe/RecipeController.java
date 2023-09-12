@@ -1,9 +1,9 @@
 package com.example.springrestapirecipe;
 
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +46,7 @@ class RecipeController {
 
 
     @PostMapping
-    Recipe addRecipes(@Valid @RequestBody Recipe recipe) {
+    Recipe addRecipes(@Validated({AddRecipe.class}) @RequestBody Recipe recipe) {
         return recipeService.addRecipe(recipe);
     }
 
@@ -56,7 +56,8 @@ class RecipeController {
     }
 
     @PatchMapping("/{id}")
-    Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
+    Recipe updateRecipe(@PathVariable Long id,
+                        @Validated({UpdateRecipe.class}) @RequestBody Recipe recipe) {
         return recipeService.updateRecipe(id, recipe);
     }
 

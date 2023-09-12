@@ -3,14 +3,10 @@ package com.example.springrestapirecipe;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
 
 /**
  * @author Grzegorz Barwiński, brwngda
@@ -28,36 +24,32 @@ public class Recipe {
     @GeneratedValue
     private Long id;
 
-    @NotNull
-    @NotBlank
-    @Size(min = 2, max = 30)
+    @NotNull(groups = AddRecipe.class)
+    @NotBlank(groups = {AddRecipe.class})
+    @Size(min = 2, max = 30, groups = {AddRecipe.class, UpdateRecipe.class})
 
     private String name;
-    @NotNull
-    @NotBlank
-    @Size(min = 10, max = 100)
+    @NotNull(groups = AddRecipe.class)
+    @NotBlank(groups = {AddRecipe.class})
+    @Size(min = 10, max = 100, groups = {AddRecipe.class, UpdateRecipe.class})
     private String description;
-    @NotNull
-    @Min(1)
+    @NotNull(groups = AddRecipe.class)
+    @Min(value = 1, groups = {AddRecipe.class, UpdateRecipe.class})
     private Integer duration;
-    @Min(1)
-    @Max(20)
-
+    @Min(value = 1, groups = {AddRecipe.class, UpdateRecipe.class})
+    @Max(value = 20, groups = {AddRecipe.class, UpdateRecipe.class})
     private Integer numberOfPeople;
     private String ingredients;
-    @NotNull
+    @NotNull(groups = AddRecipe.class)
     private Complexity complexity;
-
-    public Recipe(String name, String description, int duration, int numberOfPeople, String ingredients, Complexity complexity) {
-        this.name = name;
-        this.description = description;
-        this.duration = duration;
-        this.numberOfPeople = numberOfPeople;
-        this.ingredients = ingredients;
-        this.complexity = complexity;
-    }
-
 }
+
 enum Complexity {
     EASY, STANDARD, HARD
+}
+
+interface AddRecipe {
+}
+
+interface UpdateRecipe {
 }
