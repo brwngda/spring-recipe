@@ -3,6 +3,8 @@ package com.example.springrestapirecipe;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -31,10 +33,19 @@ public class Recipe {
     @Size(min = 2, max = 30)
 
     private String name;
+    @NotNull
+    @NotBlank
+    @Size(min = 10, max = 100)
     private String description;
+    @NotNull
+    @Min(1)
     private Integer duration;
+    @Min(1)
+    @Max(20)
+
     private Integer numberOfPeople;
     private String ingredients;
+    @NotNull
     private Complexity complexity;
 
     public Recipe(String name, String description, int duration, int numberOfPeople, String ingredients, Complexity complexity) {

@@ -1,6 +1,7 @@
 package com.example.springrestapirecipe;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,8 +13,20 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Error {
+@Builder
+public class Error<T> {
 
     private int code;
-    private String message;
+    private T message;
+    private ErrorType errorType = ErrorType.GENERAL;
+
+    public Error(int code, T message) {
+        this.code = code;
+        this.message = message;
+    }
+
+}
+
+enum ErrorType {
+    GENERAL, VALIDATION
 }

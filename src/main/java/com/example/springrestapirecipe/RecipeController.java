@@ -61,30 +61,27 @@ class RecipeController {
     }
 
     @ExceptionHandler(NoRecipeFoundException.class)
-    private ResponseEntity<Error> mapNoRecipeFoundException(NoRecipeFoundException ex) {
-        return new ResponseEntity<>(new Error(HttpStatus.NOT_FOUND.value(), ex.getMessage()), HttpStatus.NOT_FOUND);
+    private ResponseEntity<Error<String>> mapNoRecipeFoundException(NoRecipeFoundException ex) {
+        return new ResponseEntity<>(new Error<>(HttpStatus.NOT_FOUND.value(), ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(RecipeAlreadyExistsException.class)
-    private ResponseEntity<Error> mapRecipeAlreadyExistsException(RecipeAlreadyExistsException ex) {
-        return new ResponseEntity<>(new Error(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
+    private ResponseEntity<Error<String>> mapRecipeAlreadyExistsException(RecipeAlreadyExistsException ex) {
+        return new ResponseEntity<>(new Error<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    private ResponseEntity<Error> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    private ResponseEntity<Error<Map<String, String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return new ResponseEntity<>(new Error(
+        return new ResponseEntity<>(new Error<>(
                 HttpStatus.BAD_REQUEST.value(),
-                errors.toString()
+                errors,
+                ErrorType.VALIDATION
         ), HttpStatus.BAD_REQUEST);
     }
-
-
-
-
 }
