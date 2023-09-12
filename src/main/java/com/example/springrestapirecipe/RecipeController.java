@@ -1,10 +1,15 @@
 package com.example.springrestapirecipe;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -41,7 +46,7 @@ class RecipeController {
 
 
     @PostMapping
-    Recipe addRecipes(@RequestBody Recipe recipe) {
+    Recipe addRecipes(@Valid @RequestBody Recipe recipe) {
         return recipeService.addRecipe(recipe);
     }
 
@@ -64,6 +69,22 @@ class RecipeController {
     private ResponseEntity<Error> mapRecipeAlreadyExistsException(RecipeAlreadyExistsException ex) {
         return new ResponseEntity<>(new Error(HttpStatus.BAD_REQUEST.value(), ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    private ResponseEntity<Error> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return new ResponseEntity<>(new Error(
+                HttpStatus.BAD_REQUEST.value(),
+                errors.toString()
+        ), HttpStatus.BAD_REQUEST);
+    }
+
+
 
 
 }

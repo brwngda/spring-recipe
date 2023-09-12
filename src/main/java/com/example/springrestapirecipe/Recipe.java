@@ -3,9 +3,12 @@ package com.example.springrestapirecipe;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 
 /**
  * @author Grzegorz Barwiński, brwngda
@@ -22,6 +25,10 @@ public class Recipe {
     @Id
     @GeneratedValue
     private Long id;
+
+    @NotNull
+    @NotBlank
+    @Size(min = 2, max = 30)
 
     private String name;
     private String description;
