@@ -48,6 +48,11 @@ class RecipeService {
 
 
     Recipe addRecipe(Recipe recipe) {
+        String recipeName = recipe.getName();
+        recipeRepository.findByName(recipeName)
+                .ifPresent(r -> {
+                    throw new RecipeAlreadyExistsException(recipeName);
+                });
         return recipeRepository.save(recipe);
     }
 
