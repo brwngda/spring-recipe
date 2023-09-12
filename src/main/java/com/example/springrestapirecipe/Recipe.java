@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,21 +17,28 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class Recipe {
+    public Recipe(String name, String description, Integer duration, Integer numberOfPeople, String ingredients, Complexity complexity) {
+        this.name = name;
+        this.description = description;
+        this.duration = duration;
+        this.numberOfPeople = numberOfPeople;
+        this.ingredients = ingredients;
+        this.complexity = complexity;
+    }
 
     @Id
     @GeneratedValue
     private Long id;
 
     @NotNull(groups = AddRecipe.class)
-    @NotBlank(groups = {AddRecipe.class})
+    @NullOrNotBlank(groups = {AddRecipe.class, UpdateRecipe.class})
     @Size(min = 2, max = 30, groups = {AddRecipe.class, UpdateRecipe.class})
 
     private String name;
     @NotNull(groups = AddRecipe.class)
-    @NotBlank(groups = {AddRecipe.class})
+    @NullOrNotBlank(groups = {AddRecipe.class, UpdateRecipe.class})
     @Size(min = 10, max = 100, groups = {AddRecipe.class, UpdateRecipe.class})
     private String description;
     @NotNull(groups = AddRecipe.class)
