@@ -49,37 +49,46 @@ class RecipeService {
 
     Recipe addRecipe(Recipe recipe) {
         String recipeName = recipe.getName();
-        recipeRepository.findByName(recipeName)
-                .ifPresent(r -> {
-                    throw new RecipeAlreadyExistsException(recipeName);
-                });
+        checkIfRecipeNameIsUnique(recipeName);
         return recipeRepository.save(recipe);
     }
 
     Recipe deleteRecipe(Long id) {
-        Recipe recipeFromDb = recipeRepository.findById(id).orElseThrow(() -> new NoRecipeFoundException(id));
+        Recipe recipeFromDb = getRecipeById(id);
         recipeRepository.delete(recipeFromDb);
         return recipeFromDb;
     }
 
     Recipe updateRecipe(Long id, Recipe recipe) {
-        Recipe recipeToUpdate = recipeRepository.findById(id).orElseThrow(() -> new NoRecipeFoundException(id));
-        if (recipe.getName() != null) {
-            recipeToUpdate.setName(recipe.getName());
+        Recipe recipeToUpdate = getRecipeById(id);
+        String recipeName = recipe.getName();
+        if (recipeName != null && !recipeName.equals(recipeToUpdate.getName())) {
+            checkIfRecipeNameIsUnique(recipeName);
+            recipeToUpdate.setName(recipeName);
         }
-        if (recipe.getDescription() != null) {
-            recipeToUpdate.setDescription(recipe.getDescription());
+        String recipeDescription = recipe.getDescription();
+        if (recipeDescription != null && !recipeDescription.equals(recipeToUpdate.getDescription())) {
+            recipeToUpdate.setDescription(recipeDescription);
         }
-        if (recipe.getDuration() != null) {
-            recipeToUpdate.setDuration(recipe.getDuration());
+        Integer recipeDuration = recipe.getDuration();
+        if (recipeDuration != null && !recipeDuration.equals(recipeToUpdate.getDuration())) {
+            recipeToUpdate.setDuration(recipeDuration);
         }
-        if (recipe.getNumberOfPeople() != null) {
-            recipeToUpdate.setNumberOfPeople(recipe.getNumberOfPeople());
+        Integer recipeNumberOfPeople = recipe.getNumberOfPeople();
+        if (recipeNumberOfPeople != null && !recipeNumberOfPeople.equals(recipeToUpdate.getNumberOfPeople())) {
+            recipeToUpdate.setNumberOfPeople(recipeNumberOfPeople);
         }
-        if (recipe.getIngredients() != null) {
-            recipeToUpdate.setIngredients(recipe.getIngredients());
+        String recipeIngredients = recipe.getIngredients();
+        if (recipeIngredients != null && !recipeIngredients.equals(recipeToUpdate.getIngredients())) {
+            recipeToUpdate.setIngredients(recipeIngredients);
         }
         return recipeRepository.save(recipeToUpdate);
+    }
+
+    private void checkIfRecipeNameIsUnique(String recipeName) {
+        recipeRepository.findByName(recipeName).ifPresent(r -> {
+            throw new RecipeAlreadyExistsException(recipeName);
+        });
     }
 
     Pageable providePageable(Integer page, Integer size, SortType sortType) {
@@ -89,6 +98,4 @@ class RecipeService {
                 page != null && size != null ? page : 0,
                 page != null && size != null ? size : (int) recipeRepository.count(), sort);
     }
-
-
 }
